@@ -15,7 +15,7 @@
  */
 @interface SDImageCache : NSObject
 {
-    NSCache *memCache;
+    NSMutableDictionary *memCache;
     NSString *diskCachePath;
     NSOperationQueue *cacheInQueue, *cacheOutQueue;
 }
@@ -26,13 +26,6 @@
  * @return SDImageCache global instance
  */
 + (SDImageCache *)sharedImageCache;
-
-/**
- * Sets the global maximum cache age
- *
- * @param maxCacheAge The maximum length of time to keep an image in the cache, in seconds
- */
-+ (void) setMaxCacheAge:(NSInteger) maxCacheAge;
 
 /**
  * Store an image into memory and disk cache at the given key.
@@ -133,5 +126,15 @@
  * Get the number of images in the disk cache
  */
 - (int)getDiskCount;
+
+/**
+ * Get the total size of images in memory cache
+ */
+- (int)getMemorySize;
+
+/**
+ * Get the number of images in the memory cache
+ */
+- (int)getMemoryCount;
 
 @end
