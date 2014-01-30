@@ -19,11 +19,6 @@ typedef enum
     SDWebImageProgressiveDownload = 1 << 3
 } SDWebImageOptions;
 
-#if NS_BLOCKS_AVAILABLE
-typedef void(^SDWebImageSuccessBlock)(UIImage *image, BOOL cached);
-typedef void(^SDWebImageFailureBlock)(NSError *error);
-#endif
-
 /**
  * The SDWebImageManager is the class behind the UIImageView+WebCache category and likes.
  * It ties the asynchronous downloader (SDWebImageDownloader) with the image cache store (SDImageCache).
@@ -36,7 +31,7 @@ typedef void(^SDWebImageFailureBlock)(NSError *error);
  *  [manager downloadWithURL:imageURL
  *                  delegate:self
  *                   options:0
- *                   success:^(UIImage *image, BOOL cached)
+ *                   success:^(UIImage *image)
  *                   {
  *                       // do something with image
  *                   }
@@ -92,6 +87,9 @@ typedef NSString *(^CacheKeyFilter)(NSURL *url);
  */
 - (void)downloadWithURL:(NSURL *)url delegate:(id<SDWebImageManagerDelegate>)delegate;
 
+// BCS custom caching - added.
+- (void)downloadWithURL:(NSURL *)url delegate:(id<SDWebImageManagerDelegate>)delegate customCacheURL:(NSURL *)customCacheURL;
+
 /**
  * Downloads the image at the given URL if not present in cache or return the cached version otherwise.
  *
@@ -130,7 +128,7 @@ typedef NSString *(^CacheKeyFilter)(NSURL *url);
  * @param failure A block called when couldn't be retrived for some reason
  * @see [SDWebImageManager downloadWithURL:delegate:options:]
  */
-- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(SDWebImageOptions)options success:(SDWebImageSuccessBlock)success failure:(SDWebImageFailureBlock)failure;
+- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(SDWebImageOptions)options success:(void (^)(UIImage *image))success failure:(void (^)(NSError *error))failure;
 
 /**
  * Downloads the image at the given URL if not present in cache or return the cached version otherwise.
@@ -143,7 +141,7 @@ typedef NSString *(^CacheKeyFilter)(NSURL *url);
  * @param failure A block called when couldn't be retrived for some reason
  * @see [SDWebImageManager downloadWithURL:delegate:options:]
  */
-- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(SDWebImageOptions)options userInfo:(NSDictionary *)info success:(SDWebImageSuccessBlock)success failure:(SDWebImageFailureBlock)failure;
+- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(SDWebImageOptions)options userInfo:(NSDictionary *)info success:(void (^)(UIImage *image))success failure:(void (^)(NSError *error))failure;
 #endif
 
 /**
@@ -152,10 +150,5 @@ typedef NSString *(^CacheKeyFilter)(NSURL *url);
  * @param delegate The delegate to cancel requests for
  */
 - (void)cancelForDelegate:(id<SDWebImageManagerDelegate>)delegate;
-
-/**
- * Cancel all current opreations
- */
-- (void)cancelAll;
 
 @end
