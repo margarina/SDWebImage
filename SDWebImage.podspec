@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'SDWebImage'
-  s.version  = '2.7'
+  s.version  = '2.4'
   s.platform = :ios
   s.license  = 'MIT'
   s.summary  = 'Asynchronous image downloader with cache support with an UIImageView category.'
